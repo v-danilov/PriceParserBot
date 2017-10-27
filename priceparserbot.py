@@ -75,7 +75,7 @@ def main():
 		price_bot.get_updates(new_offset)
 		last_update = price_bot.get_last_update()
 		
-		if last_update != None
+		if last_update is not None
 			last_update_id = last_update['update_id']	
 			last_chat_id = last_update['message']['chat']['id']
 			last_chat_text = last_update['message']['text']
