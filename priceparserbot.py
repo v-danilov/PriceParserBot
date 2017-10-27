@@ -75,7 +75,7 @@ def main():
 		price_bot.get_updates(new_offset)
 		last_update = price_bot.get_last_update()
 		
-		if last_update is not None
+		if last_update is not None:
 			last_update_id = last_update['update_id']	
 			last_chat_id = last_update['message']['chat']['id']
 			last_chat_text = last_update['message']['text']
@@ -90,10 +90,10 @@ def main():
 				chat_list.remove(last_chat_id)
 				price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
 
-			elif last_chat_text == '/info'
+			elif last_chat_text == '/info':
 				price_bot.send_message(last_chat_id, check_price())
 
-			elif last_chat_text == '/help'
+			elif last_chat_text == '/help':
 				price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
 		
 			if hour == 10 and minute == 5:
