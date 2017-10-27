@@ -1,1 +1,1 @@
-bot: python priceparserbot.py
+worker: python priceparserbot.py
