@@ -80,15 +80,18 @@ def main():
 			last_chat_id = last_update['message']['chat']['id']
 			last_chat_text = last_update['message']['text']
 
-			if last_chat_text == '/start'
+			if last_chat_text == '/start':
 				if last_chat_id not in chat_list:
 					chat_list.append(last_chat_id)
 					price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
 					price_bot.send_message(last_chat_id, check_price())
 
 			elif last_chat_text == '/stop':
-				chat_list.remove(last_chat_id)
-				price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
+				if last_chat_id in chat_list:
+					chat_list.remove(last_chat_id)
+					price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
+				else:
+					price_bot.send_message(last_chat_id, "stopped")
 
 			elif last_chat_text == '/info':
 				price_bot.send_message(last_chat_id, check_price())
