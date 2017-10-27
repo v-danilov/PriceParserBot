@@ -29,7 +29,7 @@ class BotHandler:
             last_update = get_result[-1]
         else:
         	print(len(get_result))
-        	last_update = get_result[len(get_result)]
+        	last_update = None
         return last_update
 
 def get_html(url):
@@ -51,10 +51,11 @@ def check_price():
 	
 	new_price = get_price(get_html(adress))
 	if( new_price < price):
-		output = "ðŸŽ‰Ð”Ð¾Ð¶Ð´Ð°Ð»Ð¸ÑÑŒðŸŽ‰! Ð”Ð¸ÑÐ¿Ð»ÐµÐ¹ Ð¿Ð¾ ÑÐºÐ¸Ð´Ð¾Ð½Ñƒ! ÐÐ¾Ð²Ð°Ñ Ñ†ÐµÐ½Ð°: {} Ñ€ÑƒÐ±Ð»Ñ‘Ñƒ!".format(new_price)
+		output = "??Äîæäàëèñü??! Äèñïëåé ïî ñêèäîíó! Íîâàÿ öåíà: {} ðóáë¸ó!".format(new_price)
 	else:
-		output = "Ð–Ð´Ñ‘Ð¼ Ð¸ Ð½Ð°Ð´ÐµÐµÐ¼ÑÑ... \U0001F610 Ð¢ÐµÐºÑƒÑ‰Ð°Ñ Ñ†ÐµÐ½Ð° {} Ñ€ÑƒÐ±Ð»Ñ‘Ñƒ.".format(new_price)
+		output = "Æä¸ì è íàäååìñÿ... \U0001F610 Òåêóùàÿ öåíà {} ðóáë¸ó.".format(new_price)
 	return output
+
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
@@ -74,28 +75,38 @@ def main():
 		price_bot.get_updates(new_offset)
 		last_update = price_bot.get_last_update()
 		
-		last_update_id = last_update['update_id']	
-		last_chat_id = last_update['message']['chat']['id']
-		last_chat_text = last_update['message']['text']
+		if last_update != None
+			last_update_id = last_update['update_id']	
+			last_chat_id = last_update['message']['chat']['id']
+			last_chat_text = last_update['message']['text']
 
-		if last_chat_id not in chat_list:
-			chat_list.append(last_chat_id)
-			price_bot.send_message(last_chat_id, "\U00002705 Ð’Ñ‹ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ°Ð½Ñ‹ Ð½Ð° ÐµÐ¶ÐµÐ´Ð½ÐµÐ²Ð½ÑƒÑŽ Ñ€Ð°ÑÑÑ‹Ð»ÐºÑƒ! Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÑ‚ÑÑ Ð² \U0001F559 10 Ñ‡Ð°ÑÐ¾Ð² 5 Ð¼Ð¸Ð½ÑƒÑ‚ \U0001F559. Ð§Ñ‚Ð¾Ð±Ñ‹ Ð¾Ñ‚Ð¿Ð¸ÑÐ°Ñ‚ÑŒÑÑ Ð¾Ñ‚ Ñ€Ð°ÑÑÑ‹Ð»ÐºÐ¸ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÑŒÑ‚Ðµ \"ÐžÑ‚Ð¿Ð¸ÑÐ°Ñ‚ÑŒÑÑ\"")
-			price_bot.send_message(last_chat_id, check_price())
+			if last_chat_text == '/start'
+				if last_chat_id not in chat_list:
+					chat_list.append(last_chat_id)
+					price_bot.send_message(last_chat_id, "\U00002705 Âû óñïåøíî ïîäïèñàíû íà åæåäíåâíóþ ðàññûëêó! Èíôîðìàöèÿ îáíîâëÿåòñÿ â \U0001F559 10 ÷àñîâ 5 ìèíóò \U0001F559. ×òîáû îòïèñàòüñÿ îò ðàññûëêè îòïðàâüòå \"/stop\"")
+					price_bot.send_message(last_chat_id, check_price())
 
-		if last_chat_text == 'ÐžÑ‚Ð¿Ð¸ÑÐ°Ñ‚ÑŒÑÑ':
-			chat_list.remove(last_chat_id)
-			price_bot.send_message(last_chat_id, "Ð’Ñ‹ Ð¾Ñ‚Ð¿Ð¸ÑÐ°Ð»Ð¸ÑÑŒ Ð¾Ñ‚ Ñ€Ð°ÑÑÑ‹Ð»ÐºÐ¸. ÐŸÐ¾Ðº \U0001F618")
+			elif last_chat_text == '/stop':
+				chat_list.remove(last_chat_id)
+				price_bot.send_message(last_chat_id, "Âû îòïèñàëèñü îò ðàññûëêè. Ïîê \U0001F618")
+
+			elif last_chat_text == '/info'
+				price_bot.send_message(last_chat_id, check_price())
+
+			elif last_chat_text == '/help'
+				price_bot.send_message(last_chat_id, 'Âîçìîæíûå êîìàíäû: /start - ïîäïèñàòüñÿ íà åæåäíåâíóþ ðàññûëêó, /stop - îòïèñàòüñÿ îò ðàññûëêè, /info - ïîëó÷èòü ñâåæóþ èíôó')
 		
-		if hour == 10 and minute == 5:
-			text_mes = check_price()
-			for chat in chat_list:
-				price_bot.send_message(chat, text_mes)
+			if hour == 10 and minute == 5:
+				text_mes = check_price()
+				for chat in chat_list:
+					price_bot.send_message(chat, text_mes)
 		
-		new_offset = last_update_id + 1
+			new_offset = last_update_id + 1
 
 if __name__ == '__main__':  
     try:
         main()
+    except IndexError:
+    	print('Index error')
     except KeyboardInterrupt:
         exit()
