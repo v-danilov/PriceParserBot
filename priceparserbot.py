@@ -28,7 +28,6 @@ class BotHandler:
         if len(get_result) > 0:
             last_update = get_result[-1]
         else:
-        	print(len(get_result))
         	last_update = None
         return last_update
 
@@ -85,6 +84,8 @@ def main():
 					chat_list.append(last_chat_id)
 					price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
 					price_bot.send_message(last_chat_id, check_price())
+				else:
+					price_bot.send_message(last_chat_id, 'Ты уже подписан. Попробуй это: /help')
 
 			elif last_chat_text == '/stop':
 				if last_chat_id in chat_list:
@@ -100,6 +101,7 @@ def main():
 				price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
 		
 			if hour == 10 and minute == 5:
+				print("Daily update for {} user(s)".format(len()))
 				text_mes = check_price()
 				for chat in chat_list:
 					price_bot.send_message(chat, text_mes)
