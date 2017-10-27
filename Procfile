@@ -1,1 +1,1 @@
-web: python priceparserbot.py
+bot: python priceparserbot.py
