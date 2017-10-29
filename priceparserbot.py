@@ -60,17 +60,20 @@ def check_price():
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
 chat_list = []
 price = 7000
-now = datetime.datetime.now()
+
 #_______________________________
 
 def main():
 
 	new_offset = None
-	today = now.day
-	hour = now.hour
-	minute = now.minute
-
+	
 	while True:
+		
+		now = datetime.datetime.now()
+		today = now.day
+		hour = now.hour
+		minute = now.minute
+
 		price_bot.get_updates(new_offset)
 		last_update = price_bot.get_last_update()
 		
@@ -113,5 +116,7 @@ if __name__ == '__main__':
         main()
     except IndexError:
     	print('Index error')
+    except KeyError:
+    	print('KeyError')
     except KeyboardInterrupt:
         exit()
