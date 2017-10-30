@@ -103,7 +103,7 @@ def main():
 			elif last_chat_text == '/help':
 				price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
 		
-			if hour == 10 and minute == 5:
+			if (hour == 7 and minute == 5) or (hour == 17):
 				print("Daily update for {} user(s)".format(len()))
 				text_mes = check_price()
 				for chat in chat_list:
