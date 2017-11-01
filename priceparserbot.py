@@ -107,7 +107,7 @@ def main():
 
 		print("{}:{}".format(hour,minute))
 
-		if (hour == 20 and minute == 00) or (hour == 10 and minute == 00):
+		if (hour == 17 and minute == 00) or (hour == 7 and minute == 05):
 			print("Daily update for {} user(s)".format(len(chat_list)))
 			text_mes = check_price()
 			for chat in chat_list:
