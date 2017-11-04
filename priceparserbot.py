@@ -84,7 +84,7 @@ def check_price():
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
-file_handler = FileHandler("ulist.txt")
+file_handler = FileHandler("/tmp/ulist.txt")
 chat_list = []
 price = 7000
 
