@@ -81,7 +81,7 @@ def check_price():
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
-file_handler = FileHandler("ulist.txt")
+file_handler = FileHandler("u2list.txt")
 chat_list = []
 price = 7000
 
@@ -90,6 +90,7 @@ price = 7000
 def main():
 
 	new_offset = None
+	file_handler.write_line('\n')
 	print(file_handler.read_lines())
 	chat_list = file_handler.read_lines()
 	
