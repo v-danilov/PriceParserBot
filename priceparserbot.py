@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import os
 
 
 class BotHandler:
@@ -35,8 +36,7 @@ class FileHandler:
 
 	def __init__(self, file_name):
 		self.file_name = file_name
-		file = open(self.file_name)
-		if(!file):
+		if (not os.path.exists(file_name)):
 			open(self.file_name, 'w')
 
 	def write_line(self, line):
