@@ -73,9 +73,9 @@ def check_price():
 	
 	new_price = get_price(get_html(adress))
 	if( new_price < price):
-		output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: **{}** рублёу!".format(new_price)
+		output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: <b>{}</b> рублёу!".format(new_price)
 	else:
-		output = "Ждём и надеемся... \U0001F610 Текущая цена **{}** рублёу.".format(new_price)
+		output = "Ждём и надеемся... \U0001F610 Текущая цена <b>{}</b> рублёу.".format(new_price)
 	return output
 
 
@@ -90,6 +90,7 @@ price = 7000
 def main():
 
 	new_offset = None
+	print(file_handler.read_lines())
 	chat_list = file_handler.read_lines()
 	
 	while True:
@@ -108,6 +109,7 @@ def main():
 				last_chat_text = last_update['message']['text']
 
 				if last_chat_text == '/start':
+					print(file_handler.read_lines())
 					if last_chat_id not in chat_list:
 						chat_list.append(last_chat_id)
 						price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
