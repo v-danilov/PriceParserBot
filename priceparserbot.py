@@ -31,6 +31,29 @@ class BotHandler:
         	last_update = None
         return last_update
 
+class FileHandler:
+
+	def __init__(self, file_name):
+		self.file_name = file_name
+
+	def write_line(self, line):
+		file = open(self.file_name,'a')
+		file.write(str(line) + '\n')
+		file.close()
+
+	def write_list(self, list_lines):
+		file = open(self.file_name, 'w')
+		for ln in list_lines:
+			file.write(str(ln) + '\n')
+		file.close()
+
+	def read_lines(self):
+		file = open(self.file_name, 'r')
+		lines = file.read().splitlines()
+		file.close()
+		list_ids = list(map(int, lines))
+		return list_ids
+
 def get_html(url):
 	resp = requests.get(url)
 	return resp.text
@@ -50,14 +73,15 @@ def check_price():
 	
 	new_price = get_price(get_html(adress))
 	if( new_price < price):
-		output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: {} рублёу!".format(new_price)
+		output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: **{}** рублёу!".format(new_price)
 	else:
-		output = "Ждём и надеемся... \U0001F610 Текущая цена {} рублёу.".format(new_price)
+		output = "Ждём и надеемся... \U0001F610 Текущая цена **{}** рублёу.".format(new_price)
 	return output
 
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
+file_handler = FileHandler("ulist.txt")
 chat_list = []
 price = 7000
 
@@ -66,55 +90,53 @@ price = 7000
 def main():
 
 	new_offset = None
+	chat_list = file_handler.read_lines()
 	
 	while True:
-		
-		now = datetime.datetime.now()
-		today = now.day
-		hour = now.hour
-		minute = now.minute
 
-		price_bot.get_updates(new_offset)
-		last_update = price_bot.get_last_update()
-		
-		if last_update is not None:
-			last_update_id = last_update['update_id']	
-			last_chat_id = last_update['message']['chat']['id']
-			last_chat_text = last_update['message']['text']
+			now = datetime.datetime.now()
+			today = now.day
+			hour = now.hour
+			minute = now.minute
 
-			if last_chat_text == '/start':
-				if last_chat_id not in chat_list:
-					chat_list.append(last_chat_id)
-					price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
+			price_bot.get_updates(new_offset)
+			last_update = price_bot.get_last_update()
+			
+			if last_update is not None:
+				last_update_id = last_update['update_id']	
+				last_chat_id = last_update['message']['chat']['id']
+				last_chat_text = last_update['message']['text']
+
+				if last_chat_text == '/start':
+					if last_chat_id not in chat_list:
+						chat_list.append(last_chat_id)
+						price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
+						price_bot.send_message(last_chat_id, check_price())
+						file_handler.write_line(last_chat_id)
+					else:
+						price_bot.send_message(last_chat_id, 'Ты уже подписан. Попробуй это: /help')
+
+				elif last_chat_text == '/stop':
+					if last_chat_id in chat_list:
+						chat_list.remove(last_chat_id)
+						price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
+						file_handler.write_list(chat_list)
+
+				elif last_chat_text == '/info':
 					price_bot.send_message(last_chat_id, check_price())
-				else:
-					price_bot.send_message(last_chat_id, 'Ты уже подписан. Попробуй это: /help')
 
-			elif last_chat_text == '/stop':
-				if last_chat_id in chat_list:
-					chat_list.remove(last_chat_id)
-					price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
-				else:
-					price_bot.send_message(last_chat_id, "stopped")
+				elif last_chat_text == '/help':
+					price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
+			
+				new_offset = last_update_id + 1
 
-			elif last_chat_text == '/info':
-				price_bot.send_message(last_chat_id, check_price())
+			if (hour == 17 and minute == 0) or (hour == 7 and minute == 5):
+				print("Daily update for {} user(s)".format(len(chat_list)))
+				text_mes = check_price()
+				for chat in chat_list:
+					price_bot.send_message(chat, text_mes)
 
-			elif last_chat_text == '/help':
-				price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
-		
-			new_offset = last_update_id + 1
 
-		print("{}:{}".format(hour,minute))
-
-		if (hour == 17 and minute == 0) or (hour == 7 and minute == 5):
-			print("Daily update for {} user(s)".format(len(chat_list)))
-			text_mes = check_price()
-			for chat in chat_list:
-				price_bot.send_message(chat, text_mes)
-		else:
-			print("false")
-		
 
 if __name__ == '__main__':  
     try:
@@ -124,4 +146,9 @@ if __name__ == '__main__':
     except KeyError:
     	print('KeyError')
     except KeyboardInterrupt:
+        print("Goodbye!")
         exit()
+    
+    
+    	
+    	
