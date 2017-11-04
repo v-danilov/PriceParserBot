@@ -35,6 +35,9 @@ class FileHandler:
 
 	def __init__(self, file_name):
 		self.file_name = file_name
+		file = open(self.file_name)
+		if(!file):
+			open(self.file_name, 'w')
 
 	def write_line(self, line):
 		file = open(self.file_name,'a')
@@ -81,7 +84,7 @@ def check_price():
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
-file_handler = FileHandler("ulist.txt")
+file_handler = FileHandler("~/ulist.txt")
 chat_list = []
 price = 7000
 
