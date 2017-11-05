@@ -6,7 +6,7 @@ import json
 import pymysql
 
 
-class database:
+class DataBase:
     def __init__(self):
         conn = pymysql.connect(host="progist.pro", user="progist_marzi", db="progist_marzi", passwd="KatyaKlapp911",
                                charset="utf8",
@@ -56,7 +56,7 @@ class BotHandler:
         return result_json
 
     def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text, 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], [ 'Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
+        params = {'chat_id': chat_id, 'text': text, 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], ['Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
@@ -98,7 +98,7 @@ def check_price():
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
 price = 7000
-db = database()
+db = DataBase()
 
 #_______________________________
 
@@ -111,6 +111,7 @@ def main():
             now = datetime.datetime.now()
             today = now.day
             hour = now.hour
+            minute = now.minute
             price_bot.get_updates(new_offset)
             last_update = price_bot.get_last_update()
             
