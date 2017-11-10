@@ -59,7 +59,7 @@ class BotHandler:
         return result_json
 
     def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text, 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], ['Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
+        params = {'chat_id': chat_id, 'text': text,'parse_mode':'HTML', 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], ['Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
@@ -94,7 +94,7 @@ def check_price():
     if( new_price < price):
         output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: {} рублёу!".format(new_price)
     else:
-        output = "Ждём и надеемся... \U0001F610 Текущая цена {} рублёу.".format(new_price)
+        output = "Ждём и надеемся... \U0001F610 Текущая цена <b>{}</b> рублёу.".format(new_price)
     return output
 
 def update(new_offset):
