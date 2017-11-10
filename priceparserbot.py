@@ -23,6 +23,8 @@ class DataBase:
             self.cursor = conn.cursor()
 
     def get(self):
+        lock = Lock()
+        lock.acquire()
         self.check()
         self.cursor.execute('select * from bot')
         ids = self.cursor.fetchall()
@@ -30,6 +32,7 @@ class DataBase:
         for i in ids:
             id, =i
             ids_new.append(id)
+        lock.release()
         return ids_new
 
     def remove(self,id):
@@ -94,6 +97,51 @@ def check_price():
         output = "Ждём и надеемся... \U0001F610 Текущая цена {} рублёу.".format(new_price)
     return output
 
+def update(new_offset):
+
+    price_bot.get_updates(new_offset)
+    last_update = price_bot.get_last_update()
+            
+    if last_update is not None:
+        last_update_id = last_update['update_id']    
+        last_chat_id = last_update['message']['chat']['id']
+        last_chat_text = last_update['message']['text']
+
+        if last_chat_text in ['/start', "Подписаться"] :
+            if last_chat_id not in db.get():
+                db.add(last_chat_id)
+                price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
+                price_bot.send_message(last_chat_id, check_price())
+            else:
+                price_bot.send_message(last_chat_id, 'Ты уже подписан. Попробуй это: /help')
+
+        elif last_chat_text in ['/stop', "Отписаться"]:
+            if last_chat_id in db.get():
+                db.remove(last_chat_id)
+                price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
+
+        elif last_chat_text in ['/info', 'Текущая цена']:
+            price_bot.send_message(last_chat_id, check_price())
+
+        elif last_chat_text in ['/help', 'Помощь']:
+            price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
+            
+        new_offset = last_update_id + 1
+
+def notify():
+
+    while True:
+        now = datetime.datetime.now()
+        today = now.day
+        hour = now.hour
+        minute = now.minute
+
+        if (hour == 17 and minute == 0) or (hour == 7 and minute == 5):
+                print("Daily update for {} user(s)".format(len(db.get())))
+                text_mes = check_price()
+                for chat in db.get():
+                    price_bot.send_message(chat, text_mes)
+
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
@@ -103,50 +151,11 @@ db = DataBase()
 #_______________________________
 
 def main():
-
     new_offset = None
+    thread = Thread(target = notify)
     
     while True:
-
-            now = datetime.datetime.now()
-            today = now.day
-            hour = now.hour
-            minute = now.minute
-            price_bot.get_updates(new_offset)
-            last_update = price_bot.get_last_update()
-            
-            if last_update is not None:
-                last_update_id = last_update['update_id']    
-                last_chat_id = last_update['message']['chat']['id']
-                last_chat_text = last_update['message']['text']
-
-                if last_chat_text in ['/start', "Подписаться"] :
-                    if last_chat_id not in db.get():
-                        db.add(last_chat_id)
-                        price_bot.send_message(last_chat_id, "\U00002705 Вы успешно подписаны на ежедневную рассылку! Информация обновляется в \U0001F559 10 часов 5 минут \U0001F559. Чтобы отписаться от рассылки отправьте \"/stop\"")
-                        price_bot.send_message(last_chat_id, check_price())
-                    else:
-                        price_bot.send_message(last_chat_id, 'Ты уже подписан. Попробуй это: /help')
-
-                elif last_chat_text in ['/stop', "Отписаться"]:
-                    if last_chat_id in db.get():
-                        db.remove(last_chat_id)
-                        price_bot.send_message(last_chat_id, "Вы отписались от рассылки. Пок \U0001F618")
-
-                elif last_chat_text in ['/info', 'Текущая цена']:
-                    price_bot.send_message(last_chat_id, check_price())
-
-                elif last_chat_text in ['/help', 'Помощь']:
-                    price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
-            
-                new_offset = last_update_id + 1
-
-            if (hour == 17 and minute == 0) or (hour == 7 and minute == 5):
-                print("Daily update for {} user(s)".format(len(db.get())))
-                text_mes = check_price()
-                for chat in db.get():
-                    price_bot.send_message(chat, text_mes)
-
+        update(new_offset)
 
 
 if __name__ == '__main__':  
