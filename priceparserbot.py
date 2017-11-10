@@ -4,7 +4,7 @@ import datetime
 import os
 import json
 import pymysql
-import threading
+from threading import Thread, Lock
 
 
 class DataBase:
