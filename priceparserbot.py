@@ -128,6 +128,7 @@ def update(new_offset):
             price_bot.send_message(last_chat_id, 'Возможные команды: /start - подписаться на ежедневную рассылку, /stop - отписаться от рассылки, /info - получить свежую инфу')
             
         new_offset = last_update_id + 1
+        return new_offset
 
 def notify():
 
@@ -156,7 +157,8 @@ def main():
     thread = Thread(target = notify)
     
     while True:
-        update(new_offset)
+        new_offset = update(new_offset)
+        print(new_offset)
 
 
 if __name__ == '__main__':  
