@@ -24,7 +24,7 @@ class DataBase:
             self.cursor = conn.cursor()
 
     def get(self):
-        lock = Lock()
+        global lock
         lock.acquire()
         self.check()
         self.cursor.execute('select * from bot')
@@ -131,13 +131,11 @@ def update(new_offset):
         return new_offset
 
 def notify():
-
     while True:
         now = datetime.datetime.now()
         today = now.day
         hour = now.hour
         minute = now.minute
-
         if (hour == 17 and minute == 0) or (hour == 7 and minute == 5):
                 print("Daily update for {} user(s)".format(len(db.get())))
                 text_mes = check_price()
@@ -149,16 +147,17 @@ def notify():
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
 price = 7000
 db = DataBase()
+lock = Lock()
 
 #_______________________________
 
 def main():
     new_offset = None
     thread = Thread(target = notify)
+    thread.start()
     
     while True:
         new_offset = update(new_offset)
-        print(new_offset)
 
 
 if __name__ == '__main__':  
