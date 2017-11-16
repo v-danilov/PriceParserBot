@@ -132,7 +132,6 @@ def update(new_offset):
         return new_offset
 
 def notify():
-    while True:
         now = datetime.datetime.now()
         today = now.day
         hour = now.hour
@@ -144,9 +143,8 @@ def notify():
                     price_bot.send_message(chat, text_mes)
 
 def notify_thread():
-    time_executer.enter(60,1, notify)
-    
     while True:
+        time_executer.enter(60,1, notify)
         time_executer.run()
 
 #___________Variables___________
