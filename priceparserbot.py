@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import sched, time
 import os
 import json
 import pymysql
@@ -142,18 +143,25 @@ def notify():
                 for chat in db.get():
                     price_bot.send_message(chat, text_mes)
 
+def notify_thread():
+    time_executer.enter(60,1, notify)
+    
+    while True:
+        time_executer.run()
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
 price = 7000
 db = DataBase()
 lock = Lock()
+time_executer = sched.scheduler(time.time, time.sleep)
 
 #_______________________________
 
 def main():
     new_offset = None
-    thread = Thread(target = notify)
+    
+    thread = Thread(target = notify_thread)
     thread.start()
     
     while True:
