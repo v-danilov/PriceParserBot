@@ -94,9 +94,9 @@ def check_price():
     
     new_price = get_price(get_html(adress))
     if( new_price < price):
-        output = "🎉Дождались🎉! Дисплей по скидону! Новая цена: {} рублёу!".format(new_price)
+        output = "🎉СКИДО_ОНЧИК ПОДЪЕХАЛ🎉! Текущая цена: <b>{}</b> рублёу!".format(new_price)
     else:
-        output = "Ждём и надеемся... \U0001F610 Текущая цена <b>{}</b> рублёу.".format(new_price)
+        output = "Всё ещё пока <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
     return output
 
 def update(new_offset):
@@ -149,7 +149,7 @@ def notify_thread():
 
 #___________Variables___________
 price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
-price = 7000
+price = 6000
 db = DataBase()
 lock = Lock()
 time_executer = sched.scheduler(time.time, time.sleep)
