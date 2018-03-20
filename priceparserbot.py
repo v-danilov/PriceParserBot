@@ -96,7 +96,7 @@ def check_price():
     if( new_price < price):
         output = "🎉СКИДО_ОНЧИК ПОДЪЕХАЛ🎉! Текущая цена: <b>{}</b> рублёу!".format(new_price)
     else:
-        output = "Всё ещё пока <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
+        output = "Всё ещё <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
     return output
 
 def update(new_offset):
@@ -148,7 +148,7 @@ def notify_thread():
         time_executer.run()
 
 #___________Variables___________
-price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
+price_bot = BotHandler(__KEY_HERE__)
 price = 6000
 db = DataBase()
 lock = Lock()
