@@ -148,7 +148,7 @@ def notify_thread():
         time_executer.run()
 
 #___________Variables___________
-price_bot = BotHandler(__KEY_HERE__)
+price_bot = BotHandler('401670663:AAELFfb0SSv6qTiTlBTwkzhytSc9bH0cikI')
 price = 6000
 db = DataBase()
 lock = Lock()
