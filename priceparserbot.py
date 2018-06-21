@@ -89,7 +89,7 @@ def get_price(_soup):
             return int(price)
 
 def get_availability(_soup):
-    div_container = _soup.find_all('div',class_='product-actions__text product-actions__text--unavailable')
+    div_container = _soup.find_all('div',class_='product-actions__text--unavailable')
 
     for div in div_container:
         if(div.gettext().strip() == "Спб (м. Площадь Восстания)"):
