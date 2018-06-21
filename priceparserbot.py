@@ -37,20 +37,20 @@ class DataBase:
         lock.release()
         return ids_new
 
-    def remove(self,id):
+    def remove(self,_id):
         self.check()
-        self.cursor.execute('delete from bot where id = {}'.format(id))
+        self.cursor.execute('delete from bot where id = {}'.format(_id))
 
-    def add(self, id):
+    def add(self, _id):
         self.check()
-        self.cursor.execute('insert into bot set id = {} on duplicate key update id = id'.format(id))
+        self.cursor.execute('insert into bot set id = {} on duplicate key update id = id'.format(_id))
 
 
 
 class BotHandler:
 
-    def __init__(self, token):
-        self.token = token
+    def __init__(self, _token):
+        self.token = _token
         self.api_url = "https://api.telegram.org/bot{}/".format(token)
 
     def get_updates(self, offset=None, timeout=30):
@@ -60,8 +60,8 @@ class BotHandler:
         result_json = resp.json()['result']
         return result_json
 
-    def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text,'parse_mode':'HTML', 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], ['Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
+    def send_message(self, _chat_id, _text):
+        params = {'chat_id': _chat_id, 'text': _text,'parse_mode':'HTML', 'reply_markup':json.dumps({'keyboard':[['Подписаться','Отписаться'], ['Текущая цена'],['Помощь']],'resize_keyboard':True}).encode('utf-8')}
         method = 'sendMessage'
         resp = requests.post(self.api_url + method, params)
         return resp
@@ -75,13 +75,12 @@ class BotHandler:
             last_update = None
         return last_update
 
-def get_html(url):
-    resp = requests.get(url)
+def get_html(_url):
+    resp = requests.get(_url)
     return resp.text
 
-def get_price(html_page):
-    soup = BeautifulSoup(html_page, "html5lib")
-    div_container = soup.find_all('div',class_='product-intro__purchase')
+def get_price(_soup):
+    div_container = _soup.find_all('div',class_='product-intro__purchase')
     
     for div in div_container:
         div_price = div.find_all('div', class_='product-price__main')
@@ -89,14 +88,29 @@ def get_price(html_page):
             price = span.getText().strip().replace(' ', '')[:-1]
             return int(price)
 
+def get_availability(_soup)
+    div_container = _soup.find_all('div',class_='product-actions__text product-actions__text--unavailable')
+
+    for div in div_container:
+        if(div.gettext().strip() == "Спб (м. Площадь Восстания)")
+            return False
+    return True
+
+
 def check_price():
     adress = 'https://www.wellfix.ru/shop/product/displei-oneplus-x-s-tachskrinom-chernyi'
+    soup = BeautifulSoup(get_html(adress), "html5lib")
     
-    new_price = get_price(get_html(adress))
-    if( new_price < price):
+    new_price = get_price(soup)
+    inStock   = get_availability(soup)  
+
+    if(new_price < price):
         output = "🎉СКИДО_ОНЧИК ПОДЪЕХАЛ🎉! Текущая цена: <b>{}</b> рублёу!".format(new_price)
     else:
         output = "Всё ещё <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
+
+    statusString ="\nНаличие: " + "\U00002705" if inStock else "\U000026D4"
+    output += statusString
     return output
 
 def update(new_offset):
