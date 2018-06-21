@@ -88,7 +88,7 @@ def get_price(_soup):
             price = span.getText().strip().replace(' ', '')[:-1]
             return int(price)
 
-def get_availability(_soup)
+def get_availability(_soup):
     div_container = _soup.find_all('div',class_='product-actions__text product-actions__text--unavailable')
 
     for div in div_container:
