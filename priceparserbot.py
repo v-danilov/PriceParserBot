@@ -92,7 +92,7 @@ def get_availability(_soup):
     div_container = _soup.find_all('div',class_='product-actions__text--unavailable')
 
     for div in div_container:
-        if(div.gettext().strip() == "Спб (м. Площадь Восстания)"):
+        if(div.text.strip() == "Спб (м. Площадь Восстания)"):
             return False
     return True
 
@@ -109,8 +109,8 @@ def check_price():
     else:
         output = "Всё ещё <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
 
-    statusString ="\nНаличие: " + "\U00002705" if inStock else "\U000026D4"
-    output += statusString
+    output +="\n<b>Наличие:</b> "
+    output += "\U00002705" if inStock else "\U000026D4"
     return output
 
 def update(new_offset):
