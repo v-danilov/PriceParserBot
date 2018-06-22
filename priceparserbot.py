@@ -108,7 +108,7 @@ def check_price():
         output = "🎉СКИДО_ОНЧИК ПОДЪЕХАЛ🎉! Текущая цена: <b>{}</b> рублёу!".format(new_price)
     else:
         output = "Всё ещё <b>{}</b> рублёу... \U0001F610 Ожидаем.".format(new_price)
-
+        
     output +="\n<b>Наличие:</b> "
     output += "\U00002705" if inStock else "\U000026D4"
     return output
