@@ -9,6 +9,6 @@ PyMySQL==0.7.11
 pytz==2017.3
 requests==2.18.4
 six==1.11.0
-urllib3==1.22
+urllib3==1.26.5
 webencodings==0.5.1
 zope.interface==4.4.3
